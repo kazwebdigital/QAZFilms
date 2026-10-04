@@ -1,6 +1,7 @@
 import asyncio
 from datetime import datetime, timedelta
 import logging
+import os
 import sqlite3
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.filters import CommandStart
@@ -10,6 +11,7 @@ from aiogram.types import (
     KeyboardButton,
     ReplyKeyboardMarkup,
 )
+from aiohttp import web
 
 # Логтарды баптау
 logging.basicConfig(level=logging.INFO)
@@ -175,7 +177,7 @@ async def process_tariff(callback_query: types.CallbackQuery):
       f"📲 **Төлем жасау реквизиттері:**\n"
       f"• **Kaspi:** `{KASPI_NUMBER}`\n"
       f"• **Алушы:** {KASPI_NAME}\n\n"
-      f"⚠️ **Маңызды:** Төлем жасаған соң, чекті осы чатқа жіберіңіз немесе"
+      f"⚠️️ **Маңызды:** Төлем жасаған соң, чекті осы чатқа жіберіңіз немесе"
       f" тікелей админге жазыңыз: {ADMIN_USERNAME}"
   )
   await callback_query.answer()
@@ -367,11 +369,31 @@ async def auto_kick_expired_users():
 
 
 # -------------------------------------------------------------
-# БОТТЫ ІСКЕ ҚОСУ
+# RENDER ҮШІН ВЕБ-СЕРВЕР ХЕНДЛЕРІ
+# -------------------------------------------------------------
+async def handle_ping(request):
+  return web.Response(text="QAZFilms Bot is running!")
+
+
+# -------------------------------------------------------------
+# БОТТЫ ЖӘНЕ СЕРВЕРДІ ІСКЕ ҚОСУ
 # -------------------------------------------------------------
 async def main():
   init_db()
   asyncio.create_task(auto_kick_expired_users())
+
+  # Render талап ететін портты ашу
+  app = web.Application()
+  app.router.add_get("/", handle_ping)
+  runner = web.AppRunner(app)
+  await runner.setup()
+
+  port = int(os.environ.get("PORT", 10000))
+  site = web.TCPSite(runner, "0.0.0.0", port)
+  await site.start()
+  logging.info(f"Веб-сервер {port} портында сәтті қосылды.")
+
+  # Боттың polling циклін іске қосу
   await dp.start_polling(bot, drop_pending_updates=True)
 
 
