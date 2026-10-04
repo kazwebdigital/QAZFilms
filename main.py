@@ -17,14 +17,14 @@ logging.basicConfig(level=logging.INFO)
 # -------------------------------------------------------------
 # БОТ БАПТАУЛАРЫ
 # -------------------------------------------------------------
-API_TOKEN = "8668902478:AAHyk8V9exPc51z3gCL3heG0KrgnaEcMtEk"
-ADMIN_ID = 1901471929  # Сенің Telegram ID-ің
-CHANNEL_ID = -1004308911511  # ⚠️ Қосылды: Жіберген сілтемеңнен алынды[cite: 6]
+API_TOKEN = "8639374056:AAH9ZMSGiHvax9EwFm2zQMnh2akmIIKNwjo"
+ADMIN_ID = 1901471929
+CHANNEL_ID = -1004308911511
 
-KASPI_NUMBER = "+7 708 508 51 85"  # Сенің реквизитің
+KASPI_NUMBER = "+7 708 508 51 85"
 KASPI_NAME = "Қазыбек И."
 ADMIN_USERNAME = "@QazekeIssa"
-CHANNEL_LINK = "https://t.me/+ваша_ссылка"  # Жабық каналыңның сілтемесі
+CHANNEL_LINK = "https://t.me/+GiV00YidR7xmMWQy"  # Ссылка на ваш закрытый канал
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
@@ -330,7 +330,7 @@ async def reject_user(callback: types.CallbackQuery):
 
 
 # -------------------------------------------------------------
-# АВТО-КИК ФУНКЦИЯСЫ (ФОНДА ӘР САҒАТ САЙЫН ТЕКСЕРЕДІ)
+# АВТО-КИК ФУНКЦИЯСЫ
 # -------------------------------------------------------------
 async def auto_kick_expired_users():
   while True:
@@ -372,7 +372,6 @@ async def auto_kick_expired_users():
 async def main():
   init_db()
   asyncio.create_task(auto_kick_expired_users())
-  # Ескі сессиялар қақтығыспауы үшін drop_pending_updates=True қосылды
   await dp.start_polling(bot, drop_pending_updates=True)
 
 
